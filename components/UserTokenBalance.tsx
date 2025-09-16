@@ -4,22 +4,53 @@ import { useState, useEffect } from 'react';
 import { formatTokenAmount } from '../lib/utils';
 
 export function UserTokenBalance() {
-  const [balance, setBalance] = useState(1250);
+  const [balance, setBalance] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate token balance updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Randomly update balance to simulate rewards
-      if (Math.random() > 0.8) {
-        setIsAnimating(true);
-        setBalance(prev => prev + Math.floor(Math.random() * 20) + 5);
-        setTimeout(() => setIsAnimating(false), 500);
+    const fetchBalance = async () => {
+      try {
+        const response = await fetch('/api/users');
+        const data = await response.json();
+
+        if (data.success) {
+          setBalance(data.data.tokenBalance);
+        }
+      } catch (error) {
+        console.error('Error fetching balance:', error);
+      } finally {
+        setIsLoading(false);
       }
-    }, 10000);
+    };
+
+    fetchBalance();
+
+    // Poll for balance updates every 30 seconds
+    const interval = setInterval(fetchBalance, 30000);
 
     return () => clearInterval(interval);
   }, []);
+
+  // Trigger animation when balance changes
+  useEffect(() => {
+    if (balance > 0 && !isLoading) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [balance, isLoading]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 bg-surface px-3 py-2 rounded-full">
+          <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+          <span className="font-semibold text-sm text-text-secondary">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center space-x-2">
