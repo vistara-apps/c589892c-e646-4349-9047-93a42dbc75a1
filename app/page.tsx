@@ -79,7 +79,11 @@ export default function HomePage() {
         {activeTab === 'feed' ? (
           <PollFeed />
         ) : (
-          <CreatePollForm onPollCreated={() => setActiveTab('feed')} />
+          <CreatePollForm onPollCreated={() => {
+            setActiveTab('feed');
+            // Refresh the page to show the new poll
+            setTimeout(() => window.location.reload(), 1000);
+          }} />
         )}
       </main>
     </div>

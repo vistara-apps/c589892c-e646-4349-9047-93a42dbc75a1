@@ -48,6 +48,106 @@ A community-driven polling platform built as a Base Mini App that rewards user p
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
+## API Documentation
+
+### Polls API
+
+#### GET /api/polls
+Fetch polls with optional filtering and pagination.
+
+**Query Parameters:**
+- `filter` (string): 'all', 'trending', 'recent', 'active'
+- `limit` (number): Number of polls to return (default: 20)
+- `offset` (number): Pagination offset (default: 0)
+
+#### POST /api/polls
+Create a new poll.
+
+**Request Body:**
+```json
+{
+  "question": "What's your favorite crypto?",
+  "options": ["Bitcoin", "Ethereum", "Solana"],
+  "duration": 24,
+  "isPublic": true,
+  "theme": "default"
+}
+```
+
+#### GET /api/polls/[id]
+Fetch a specific poll by ID.
+
+#### POST /api/polls/[id]/vote
+Vote on a specific poll.
+
+**Request Body:**
+```json
+{
+  "optionId": "1"
+}
+```
+
+### Users API
+
+#### GET /api/users
+Get current user information including token balance.
+
+#### POST /api/users
+Create a new user.
+
+### Rewards API
+
+#### GET /api/rewards
+Get user's token transaction history.
+
+### Telegram Integration
+
+#### POST /api/telegram/webhook
+Handle Telegram bot interactions.
+
+**Commands:**
+- `/start` - Welcome message
+- `/create` - Create poll instructions
+- `/feed` - View trending polls
+- `/balance` - Check token balance
+- `/help` - Show help
+
+### Farcaster Frames
+
+#### GET /api/frames/poll/[id]
+Generate Farcaster frame for a poll.
+
+#### POST /api/frames/vote
+Handle Farcaster frame voting.
+
+## Database Schema
+
+The app uses a JSON-based database for development (easily replaceable with PostgreSQL/MySQL).
+
+### Core Entities
+- **Users**: userId, walletAddress, farcasterId, tokenBalance, createdAt
+- **Polls**: pollId, creatorId, question, options, theme, createdAt, expiresAt, isPublic, totalVotes
+- **Votes**: voteId, userId, pollId, selectedOption, votedAt
+- **TokenTransactions**: txId, fromUserId, toUserId, amount, type, timestamp
+
+## Token Rewards
+
+- **Vote**: +10 tokens
+- **Poll Creation**: +50 tokens
+- **Referral**: +100 tokens
+
+## Production Deployment
+
+1. Set up environment variables in production
+2. Deploy to Vercel, Netlify, or your preferred platform
+3. Configure Telegram webhook URL
+4. Deploy token contract to Base network
+5. Set up production database if needed
+
+## Contributing
+
+We welcome contributions! Please feel free to submit issues and pull requests.
+
 ## Project Structure
 
 ```

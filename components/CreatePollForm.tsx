@@ -70,50 +70,42 @@ export function CreatePollForm({ onPollCreated }: CreatePollFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      // Simulate API call to create poll
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // In a real app, this would make an API call to create the poll
-      const newPoll = {
-        pollId: generatePollId(),
-        creatorId: 'current-user',
-        question: formData.question,
-        options: formData.options
-          .filter(opt => opt.trim())
-          .map((opt, index) => ({
-            id: (index + 1).toString(),
-            text: opt.trim(),
-            votes: 0,
-            percentage: 0,
-          })),
-        theme: formData.theme,
-        createdAt: new Date(),
-        expiresAt: new Date(Date.now() + formData.duration * 60 * 60 * 1000),
-        isPublic: formData.isPublic,
-        totalVotes: 0,
-      };
-
-      console.log('Poll created:', newPoll);
-      console.log(`Earned ${TOKEN_REWARDS.CREATE_POLL} tokens for creating a poll!`);
-
-      // Reset form
-      setFormData({
-        question: '',
-        options: ['', ''],
-        duration: 24,
-        isPublic: true,
-        theme: 'default',
+      const response = await fetch('/api/polls', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
-      onPollCreated();
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('Poll created successfully!');
+        console.log(`Earned ${TOKEN_REWARDS.CREATE_POLL} tokens for creating a poll!`);
+
+        // Reset form
+        setFormData({
+          question: '',
+          options: ['', ''],
+          duration: 24,
+          isPublic: true,
+          theme: 'default',
+        });
+
+        onPollCreated();
+      } else {
+        setErrors({ submit: data.error || 'Failed to create poll' });
+      }
     } catch (error) {
       console.error('Error creating poll:', error);
+      setErrors({ submit: 'Failed to create poll. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -257,6 +249,13 @@ export function CreatePollForm({ onPollCreated }: CreatePollFormProps) {
               Make this poll public (visible to all users)
             </label>
           </div>
+
+          {/* Submit Error */}
+          {errors.submit && (
+            <div className="bg-red-500 bg-opacity-10 border border-red-500 rounded-md p-3">
+              <p className="text-red-500 text-sm">{errors.submit}</p>
+            </div>
+          )}
 
           {/* Submit Button */}
           <div className="flex space-x-4">
