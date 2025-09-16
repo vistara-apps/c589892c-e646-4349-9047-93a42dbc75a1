@@ -1,0 +1,30 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "PollPulse",
+    "subtitle": "Built with Zara",
+    "description": "PollPulse is a Base Mini App built with Zara.",
+    "iconUrl": "https://0co.to/images/zara-2.png",
+    "homeUrl": "https://c589892ce6464349904793a42dbc75a1-od7r.vercel.app",
+    "splashImageUrl": "https://c589892ce6464349904793a42dbc75a1-od7r.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "heroImageUrl": "https://c589892ce6464349904793a42dbc75a1-od7r.vercel.app/image.png",
+    "tagline": "PollPulse",
+    "screenshotUrls": [
+      "https://c589892ce6464349904793a42dbc75a1-od7r.vercel.app/screenshot.png",
+      "https://c589892ce6464349904793a42dbc75a1-od7r.vercel.app/screenshot.png"
+    ],
+    "primaryCategory": "social",
+    "tags": [
+      "base",
+      "miniapp",
+      "onchainkit"
+    ],
+    "webhookUrl": "https://c589892ce6464349904793a42dbc75a1-od7r.vercel.app/api/webhook"
+  }
+}
