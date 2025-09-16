@@ -1,21 +1,43 @@
 'use client';
 
-import { MiniKitProvider } from '@coinbase/minikit';
-import { OnchainKitProvider } from '@coinbase/onchainkit';
-import { base } from 'wagmi/chains';
+import dynamic from 'next/dynamic';
+
+// Dynamically import OnchainKitProvider to avoid SSR issues
+const OnchainKitProvider = dynamic(
+  () => import('@coinbase/onchainkit').then(mod => mod.OnchainKitProvider),
+  { ssr: false }
+);
+
+const baseChain = {
+  id: 8453,
+  name: 'Base',
+  network: 'base',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ether',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://mainnet.base.org'],
+    },
+    public: {
+      http: ['https://mainnet.base.org'],
+    },
+  },
+  blockExplorers: {
+    default: { name: 'Basescan', url: 'https://basescan.org' },
+  },
+  testnet: false,
+};
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <MiniKitProvider
-      chain={base}
-      apiKey={process.env.NEXT_PUBLIC_MINIKIT_API_KEY || ''}
+    <OnchainKitProvider
+      apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY || ''}
+      chain={baseChain}
     >
-      <OnchainKitProvider
-        apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY || ''}
-        chain={base}
-      >
-        {children}
-      </OnchainKitProvider>
-    </MiniKitProvider>
+      {children}
+    </OnchainKitProvider>
   );
 }

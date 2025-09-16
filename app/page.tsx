@@ -1,14 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useMiniKit } from '@coinbase/minikit';
 import { PollFeed } from '../components/PollFeed';
 import { CreatePollForm } from '../components/CreatePollForm';
 import { UserTokenBalance } from '../components/UserTokenBalance';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export default function HomePage() {
-  const { context } = useMiniKit();
+  // For now, we'll use mock context data since useMiniKit is not available
+  const context = {
+    user: {
+      displayName: 'Guest User',
+      avatar: '👤'
+    }
+  };
   const [activeTab, setActiveTab] = useState<'feed' | 'create'>('feed');
   const [isLoading, setIsLoading] = useState(true);
 
